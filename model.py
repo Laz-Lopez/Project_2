@@ -32,7 +32,7 @@ def area_plot_chi2(train):
     else:
         print('We fail to reject the null hypothesis that', null_hyp)
         print('There appears to be no relationship between Tax Value and the Sqft')   
-    print('P-Value', p)
+    print('P', p)
     print('Chi2', round(chi2, 2))
     
 def sqft_fun(train):
@@ -61,7 +61,7 @@ def bed_plot_chi2(train):
     else:
         print('We fail to reject the null hypothesis that', null_hyp)
         print('There appears to be no relationship between Tax Value and the Number of Bedrooms')   
-    print('P-Value', p)
+    print('P', p)
     print('Chi2', round(chi2, 2))
     
     
@@ -89,7 +89,7 @@ def bath_plot_chi2(train):
     else:
         print('We fail to reject the null hypothesis that', null_hyp)
         print('There appears to be no relationship between Tax Value and the Number of Bathrooms')   
-    print('P-Value', p)
+    print('P', p)
     print('Chi2', round(chi2, 2))
 
     
@@ -159,44 +159,34 @@ def evaluate_models(y_train, y_validate, x_train, x_validate, x_test):
     x_validate_degree2 = pf.transform(x_validate)
     x_test_degree2 = pf.transform(x_test)
 
-    # create the model object
     lm2 = LinearRegression(normalize=True)
 
-    # fit the model to our training data. We must specify the column in y_train, 
-    # since we have converted it to a dataframe from a series! 
+    
     lm2.fit(x_train_degree2, y_train.tax_value)
 
-    # predict train
     y_train['tax_value_pred_lm2'] = lm2.predict(x_train_degree2)
 
-    # predict validate
+    
     y_validate['tax_value_pred_lm2'] = lm2.predict(x_validate_degree2)
 
-    # Getting rid of the negative predicted value
     replace_lm2 = y_validate['tax_value_pred_lm2'].min()
     replace_lm2_avg = y_validate['tax_value_pred_lm2'].mode()
     y_validate['tax_value_pred_lm2'] = y_validate['tax_value_pred_lm2'].replace(replace_lm2, replace_lm2_avg[0])
 
-    # evaluate: rmse
     rmse_train = mean_squared_error(y_train.tax_value, y_train.tax_value_pred_lars)**(1/2)
-    # evaluate: rmse
     rmse_validate = mean_squared_error(y_validate.tax_value, y_validate.tax_value_pred_lars)**(1/2)
-    print("RMSE for Lasso + Lars\nTraining/In-Sample: ", round(rmse_train, 2), 
+    print("RMSE for Lasso & Lars\nTraining/In-Sample: ", round(rmse_train, 2), 
         "\nValidation/Out-of-Sample: ", round(rmse_validate, 2))
-    print("R2 Value:", round(r2_score(y_train.tax_value, y_train.tax_value_pred_lars), 2))
-    print('-----------------------------------------------')
-    # evaluate: rmse
+    print("R2:", round(r2_score(y_train.tax_value, y_train.tax_value_pred_lars), 2))
+    print('_______________________________________________')
     rmse_train = mean_squared_error(y_train.tax_value, y_train.tax_value_pred_lm)**(1/2)
-    # evaluate: rmse
     rmse_validate = mean_squared_error(y_validate.tax_value, y_validate.tax_value_pred_lm)**(1/2)
     print("RMSE for OLS using LinearRegression\nTraining/In-Sample: ", round(rmse_train, 2), 
         "\nValidation/Out-of-Sample: ", round(rmse_validate, 2))
-    print("R2 Value:", round(r2_score(y_train.tax_value, y_train.tax_value_pred_lm), 2))
-    print('-----------------------------------------------')
-    # evaluate: rmse
+    print("R2:", round(r2_score(y_train.tax_value, y_train.tax_value_pred_lm), 2))
+    print('_______________________________________________')
     rmse_train = mean_squared_error(y_train.tax_value, y_train.tax_value_pred_lm2)**(1/2)
-    # evaluate: rmse
     rmse_validate = mean_squared_error(y_validate.tax_value, y_validate.tax_value_pred_lm2)**(1/2)
     print("RMSE for Polynomial Model, degrees=2\nTraining/In-Sample: ", round(rmse_train, 2), 
         "\nValidation/Out-of-Sample: ", round(rmse_validate, 2))
-    print("R2 Value:", round(r2_score(y_train.tax_value, y_train.tax_value_pred_lm2), 2))
+    print("R2:", round(r2_score(y_train.tax_value, y_train.tax_value_pred_lm2), 2))
