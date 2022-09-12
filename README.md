@@ -270,10 +270,10 @@ R2: 0.22
 ***
 
 ## <a name="conclusion"></a>Conclusion:
-Sqft plays a factor in value
-Number of Bathroom plays a factor in Value
-Number of Bedrooms plays a factor in Value
-
+Sqft plays a factor in value,
+Number of Bathroom plays a factor in Value,
+Number of Bedrooms plays a factor in Value,
+---
 ### Steps to Reproduce
 Your readme should include useful and adequate instructions for reproducing your analysis and final report.
 
