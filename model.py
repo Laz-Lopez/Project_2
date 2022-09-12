@@ -39,15 +39,14 @@ def area_plot_chi2(train):
     
 def sqft_fun(train):
     plt.figure(figsize = (12, 8))
-    ax = sns.barplot(x='Sqft', y='tax_value', data=train)
+    ax = sns.barplot(x='Sqft', y='tax_value', data=train,ci=None)
     ax.set_xticklabels(ax.get_xticklabels(), ha="right")
     tax_value_avg = train.tax_value.mean()
     plt.axhline(tax_value_avg, label='Tax Value Average')
     plt.legend()
     plt.show()
-    test_results = stats.pearsonr(train.bathrooms, train.tax_value)
     area_plot_chi2(train)
-    return print(test_results)
+    return
 
 
 
@@ -70,7 +69,7 @@ def bed_plot_chi2(train):
     
 def bedroom_fun(train):
     plt.figure(figsize = (12, 8))
-    ax = sns.barplot(x='bedrooms', y='tax_value', data=train)
+    ax = sns.barplot(x='bedrooms', y='tax_value', data=train,ci=None)
     ax.set_xticklabels(ax.get_xticklabels(), ha="right")
     tax_value_avg = train.tax_value.mean()
     plt.axhline(tax_value_avg, label='Tax Value Average')
@@ -97,7 +96,7 @@ def bath_plot_chi2(train):
     
 def bathroom_fun(train):
     plt.figure(figsize = (12, 8))
-    ax = sns.barplot(x='bathrooms', y='tax_value', data=train)
+    ax = sns.barplot(x='bathrooms', y='tax_value', data=train,ci=None)
     ax.set_xticklabels(ax.get_xticklabels(), ha="right")
     tax_value_avg = train.tax_value.mean()
     plt.axhline(tax_value_avg, label='Tax Value Average')
