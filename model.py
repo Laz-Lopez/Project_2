@@ -17,7 +17,8 @@ from sklearn.metrics import mean_squared_error,r2_score, explained_variance_scor
 from sklearn.preprocessing import PolynomialFeatures
 
 from env import host, user, password
-
+"""
+"""
 
 
 def area_plot_chi2(train):
@@ -108,54 +109,52 @@ def evaluate_models(y_train, y_validate, x_train, x_validate, x_test):
     """
     This mess puts runs the models it pulls everthing in to one big mess 
     """
-    # get rid of that sqft col 
     
     x_train=x_train.drop(columns=['Sqft'])
     x_validate=x_validate.drop(columns=['Sqft'])
     x_test=x_test.drop(columns=['Sqft'])
-    # create the model object
+
     lm = LinearRegression(normalize=True)
 
-    # fit the model to our training data. We must specify the column in y_train, 
-    # since we have converted it to a dataframe from a series! 
+    
     lm.fit(x_train, y_train.tax_value)
 
-    # predict train
+
     y_train['tax_value_pred_lm'] = lm.predict(x_train)
 
-    # predict validate
+
     y_validate['tax_value_pred_lm'] = lm.predict(x_validate)
 
-    # Getting rid of the negative predicted value
+
     replace_lm = y_validate['tax_value_pred_lm'].min()
     replace_lm_avg = y_validate['tax_value_pred_lm'].mean()
     y_validate['tax_value_pred_lm'] = y_validate['tax_value_pred_lm'].replace(replace_lm, replace_lm_avg)
 
-    # create the model object
+
     lars = LassoLars(alpha=1.0)
 
-    # fit the model to our training data. We must specify the column in y_train, 
-    # since we have converted it to a dataframe from a series! 
+ 
+
     lars.fit(x_train, y_train.tax_value)
 
-    # predict train
+
     y_train['tax_value_pred_lars'] = lars.predict(x_train)
 
-    # predict validate
+
     y_validate['tax_value_pred_lars'] = lars.predict(x_validate)
 
-    # Getting rid of the negative predicted value
+
     replace_lars = y_validate['tax_value_pred_lars'].min()
     replace_lars_avg = y_validate['tax_value_pred_lars'].mean()
     y_validate['tax_value_pred_lars'] = y_validate['tax_value_pred_lars'].replace(replace_lars, replace_lars_avg)
 
-    # make the polynomial features to get a new set of features
+
     pf = PolynomialFeatures(degree=2)
 
-    # fit and transform x_train_scaled
+
     x_train_degree2 = pf.fit_transform(x_train)
 
-    # transform x_validate_scaled & x_test_scaled
+
     x_validate_degree2 = pf.transform(x_validate)
     x_test_degree2 = pf.transform(x_test)
 
